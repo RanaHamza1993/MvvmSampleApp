@@ -40,6 +40,6 @@ class LoginActivity : AppCompatActivity(),AuthListener {
 
     override fun onFailure(message: String) {
         progress_bar.hide()
-        showErrorMessage(message)
+        //showErrorMessage(message)
     }
 }

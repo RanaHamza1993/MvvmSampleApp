@@ -22,9 +22,9 @@ class UserRepository {
                     response: Response<ResponseBody>
                 ) {
                     if(response.isSuccessful){
-                        loginResponse.value=response.body()?.toString()
+                        loginResponse.value=response.body()?.string()
                     }else
-                        loginResponse.value=response.errorBody()?.toString()
+                        loginResponse.value=response.errorBody()?.string()
                 }
 
             })
