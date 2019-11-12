@@ -3,6 +3,7 @@ package com.brainplow.mvvmsampleapp.ui.auth
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.brainplow.mvvmsampleapp.data.repositories.UserRepository
+import com.brainplow.mvvmsampleapp.util.Couroutines
 
 class AuthViewModel: ViewModel() {
     var email:String?=null
@@ -17,7 +18,14 @@ class AuthViewModel: ViewModel() {
             return
         }
         //success
-        val loginResponse= UserRepository().userLogin(email!!,pwd!!)
-        authListener?.onSuccess(loginResponse)
+//        val loginResponse= UserRepository().userLogin(email!!,pwd!!)
+//        authListener?.onSuccess(loginResponse)
+        Couroutines.main{
+            val response=UserRepository().userLogin(email!!,pwd!!)
+            if(response.isSuccessful)
+                authListener?.onSuccess(response.body()?.user!!)
+            else
+                authListener?.onFailure(response.code().toString())
+        }
     }
 }

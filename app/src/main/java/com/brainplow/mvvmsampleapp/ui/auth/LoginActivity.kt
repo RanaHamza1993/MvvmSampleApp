@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.brainplow.mvvmsampleapp.R
+import com.brainplow.mvvmsampleapp.data.db.entities.User
 import com.brainplow.mvvmsampleapp.databinding.ActivityLoginBinding
 import com.brainplow.mvvmsampleapp.util.*
 import kotlinx.android.synthetic.main.activity_login.*
@@ -29,15 +30,18 @@ class LoginActivity : AppCompatActivity(),AuthListener {
         progress_bar.show()
     }
 
-    override fun onSuccess(message: LiveData<String>) {
-        //showSuccessMessage("Login Success")
-
-        message.observe(this, Observer {
-            showSuccessMessage(it)
-            progress_bar.hide()
-        })
+//    override fun onSuccess(message: LiveData<String>) {
+//        //showSuccessMessage("Login Success")
+//
+//        message.observe(this, Observer {
+//            showSuccessMessage(it)
+//            progress_bar.hide()
+//        })
+//    }
+    override fun onSuccess(user: User) {
+        progress_bar.hide()
+        showSuccessMessage("${user.name} Login Success")
     }
-
     override fun onFailure(message: String) {
         progress_bar.hide()
         //showErrorMessage(message)
