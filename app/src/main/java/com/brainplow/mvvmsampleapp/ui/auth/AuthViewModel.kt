@@ -3,13 +3,17 @@ package com.brainplow.mvvmsampleapp.ui.auth
 import android.view.View
 import androidx.lifecycle.ViewModel
 import com.brainplow.mvvmsampleapp.data.repositories.UserRepository
+import com.brainplow.mvvmsampleapp.util.ApiException
 import com.brainplow.mvvmsampleapp.util.Couroutines
 
-class AuthViewModel: ViewModel() {
+class AuthViewModel(
+    private val repository: UserRepository
+): ViewModel() {
     var email:String?=null
     var pwd:String?=null
     var authListener:AuthListener?=null
 
+    fun getLoggedInUser()=repository.getUser()
     fun onLoginButtonClick(view: View?){
         authListener?.onStarted()
         if(email.isNullOrEmpty()|| pwd.isNullOrEmpty()){
@@ -21,11 +25,17 @@ class AuthViewModel: ViewModel() {
 //        val loginResponse= UserRepository().userLogin(email!!,pwd!!)
 //        authListener?.onSuccess(loginResponse)
         Couroutines.main{
-            val response=UserRepository().userLogin(email!!,pwd!!)
-            if(response.isSuccessful)
-                authListener?.onSuccess(response.body()?.user!!)
-            else
-                authListener?.onFailure(response.code().toString())
+            try {
+                val response = repository.userLogin(email!!, pwd!!)
+                response.user?.let {
+                    authListener?.onSuccess(it)
+                    repository.saveUser(it)
+                    return@main
+                }
+                authListener?.onFailure(response.message!!)
+            }catch (e:ApiException){
+                authListener?.onFailure(e.message!!)
+            }
         }
     }
 }

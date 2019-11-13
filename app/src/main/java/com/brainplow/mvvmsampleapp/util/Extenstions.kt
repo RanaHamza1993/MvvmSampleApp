@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import es.dmoral.toasty.Toasty
 
 fun Context.showSuccessMessage(message: String, duration:Int= Toast.LENGTH_SHORT) {
@@ -30,4 +31,12 @@ fun View.show(){
 }
 fun View.hide(){
     visibility=View.GONE
+}
+
+fun View.snackBar(message: String){
+    Snackbar.make(this,message,Snackbar.LENGTH_LONG).also { snackbar ->
+        snackbar.setAction("Ok"){
+            snackbar.dismiss()
+        }.show()
+    }
 }
